@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <!--meta name="viewport" content="width=device-width, initial-scale=1.0"-->
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <!-- Cordova -->
+        <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com http://raw.githubusercontent.com 'unsafe-eval' 'unsafe-inline'; style-src 'self' http://* 'unsafe-inline'; media-src *; img-src 'self' data: content:; font-src 'self' http://* 'unsafe-inline';">
+        <meta name="format-detection" content="telephone=no">
+        <meta name="msapplication-tap-highlight" content="no">
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+        <!-- Page title -->
+        <title>Gas Conversion</title>
+        <meta name="description" content="Estimates liquid oxygen, nitrogen, argon, carbon dioxide, and nitrous oxide density, gas unit conversion. " />
+        <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+        <!--<link rel="shortcut icon" type="image/ico" href="favicon.ico" />-->
+        <!-- Favicon -->
+        <link rel="shortcut icon" href="assetsh/images/favicon.ico">
+        <!-- Vendor styles -->
+        <link rel="stylesheet" href="assetsh/vendor/fontawesome/css/font-awesome.css" />
+        <link rel="stylesheet" href="assetsh/vendor/metisMenu/dist/metisMenu.css" />
+        <link rel="stylesheet" href="assetsh/vendor/animate.css/animate.css" />
+        <link rel="stylesheet" href="assetsh/vendor/bootstrap/dist/css/bootstrap.css" />
+        <!-- App styles -->
+        <link rel="stylesheet" href="assetsh/fonts/pe-icon-7-stroke/css/pe-icon-7-stroke.css" />
+        <link rel="stylesheet" href="assetsh/fonts/pe-icon-7-stroke/css/helper.css" />
+        <link rel="stylesheet" href="assetsh/styles/style.css">
+        <!-- Custom css -->
+        <link href="assetsh/css/custom.css" rel="stylesheet">
+        <style type="text/css">
+            .col_Cell{/*background-color: #ffffe8;*/}
+            .calc3_Table{ outline: none !important;
+            height:100% !important;
+            border:none !important;
+            box-shadow:none !important;
+            /*background-color: #ffffe8 !important;*/
+            }
+        </style>
+        <script src="js/gasconv.js"></script>
+        <script>
+            function getBrowser() {        
+                try {
+                    var e;
+                    var f = e.width;
+                } catch(e) {
+                    var err = e.toString();
+                    if(err.indexOf("not an object") !== -1) {
+                        return "safari";
+                    } else if(err.indexOf("Cannot read") !== -1) {
+                        return "chrome";
+                    } else if(err.indexOf("e is undefined") !== -1) {
+                        return "firefox";
+                    } else if(err.indexOf("Unable to get property 'width' of undefined or null reference") !== -1) {
+                        if(!(false || !!document.documentMode) && !!window.StyleMedia) {
+                            return "edge";
+                        } else {
+                            return "IE";
+                        }
+                    } else if(err.indexOf("cannot convert e into object") !== -1) {
+                        return "opera";
+                    } else {
+                        return undefined;
+                    }
+                }
+            }
+
+            function onLoad() {
+                if (navigator.userAgent.match(/(iPhone|iPod|iPad|.*Android.*Version\/[.0-9]*|BlackBerry|IEMobile)/)) {
+                    /* Cordova */
+                    cordovaready = true;
+                    document.addEventListener("deviceready", onDeviceReady, false);
+                } else {
+                    /* Browser */
+                    cordovaready = false;
+                    onDeviceReady(); //this is the browser
+                }
+            }
+        </script>
+    </head>
+    <body class="fixed-navbar hide-sidebar" onload="onLoad()">
+        <!-- Simple splash screen-->
+        <div class="splash">
+            <div class="color-line"></div>
+            <div class="splash-title">
+                <h1>Gas Conversion</h1>
+                <p id="splash-msg">Estimates liquid density, gas unit conversion. </p>
+                <img src="assetsh/images/loading-bars.svg" width="64" height="64" alt="Wait..."/> 
+            </div>
+        </div>
+        <!--[if lt IE 7]>
+        <p class="alert alert-danger">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+        <!-- Header -->
+        <div id="header">
+            <div class="color-line"></div>
+            <nav role="navigation">
+                <div class="header-link hide-menu"><i class="fa fa-bars"></i></div>
+                <div class="small-logo">
+                    <span class="text-primary">&nbsp;Gas Conversion&nbsp;</span>
+                </div>
+            </nav>
+        </div>
+        <!-- Navigation -->
+        <aside id="menu">
+            <div id="navigation">
+                <div class="profile-picture">
+                    <div><img src="assetsh/images/Logo5_15_Mar_15.png" width="100" alt="logo"></div>
+                </div>
+                <ul class="nav" id="side-menu" style="margin-left: 0px;padding-left: 0px;">
+                    <li><a href="#myAbout" data-toggle="modal"> <span class="nav-label">About</span></a></li>
+                    <li><a href="#myUnits" data-toggle="modal"> <span class="nav-label">Units</span></a></li>
+                    <li><a href="mailto:ketut.kumajaya@gmail.com"> <span class="nav-label">Contact</span></a></li>
+                </ul>
+            </div>
+        </aside>
+        <!-- Main Wrapper -->
+        <div id="wrapper" style="display: block;">
+            <div class="content animate-panel">
+                <div class="row">
+                    <div class="col-sm-5 col-md-6">
+                        <div class="hpanel hblue">
+                            <div class="panel-heading">
+                                <div class="panel-tools">
+                                    <a class="showhide"><i class="fa fa-chevron-up"></i></a>                   
+                                </div>
+                                Vapor Pressure &amp; Temperature
+                            </div>
+                            <div class="panel-body ">
+                                <div class="form-group">
+                                    <label class="control-label" for="ProductSel">Product</label>
+                                    <select class="form-control" id="ProductSel" onblur="changeHandler()" onchange="changeHandler()">
+                                        <option value="1">Oxygen</option>
+                                        <option value="2" selected="selected">Nitrogen</option>
+                                        <option value="3">Argon</option>
+                                        <option value="4">Carbon Dioxide</option>
+                                        <option value="5">Nitrous Oxide</option>
+                                    </select>
+                                </div>
+                                <form role="form" onkeypress="return event.keyCode != 13;">
+                                    <div id="Grp1" class="form-group">
+                                        <label class="control-label" for="Inp1" id="Lab1">Pressure</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control " value="1.01325" id="Inp1" placeholder="Pressure" onfocus="setFocus('Inp1'); CalcTab()"  onchange="CalcTab()" onkeyup="CalcTab()" onblur="CalcTab()">
+                                            <div class="input-group-addon" id="Disp1">bar</div>
+                                        </div>
+                                        <div id="Res1"></div>
+                                    </div>
+                                    <div id="Grp2" class="form-group">
+                                        <label class="control-label" for="Inp2">Temperature</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control " value="0.00" id="Inp2" placeholder="Temperature" onfocus="setFocus('Inp2'); CalcTab()"  onchange="CalcTab()" onkeyup="CalcTab()" onblur="CalcTab()">
+                                            <div class="input-group-addon" id="Disp2">&#176;C</div>
+                                        </div>
+                                        <div id="Res2"></div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-5 col-sm-offset-2 col-md-6 col-md-offset-0">
+                        <div class="hpanel hred">
+                            <div class="panel-heading">
+                                <div class="panel-tools">
+                                    <a class="showhide"><i class="fa fa-chevron-up"></i></a>                   
+                                </div>
+                                Unit Conversion
+                            </div>
+                            <div class="panel-body ">
+                                <form role="form" onkeypress="return event.keyCode != 13;">
+                                    <div id="Grp3" class="form-group">
+                                        <label class="control-label" for="Inp3" id="Lab3">Liquid</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control " value="1.0000" id="Inp3" placeholder="Liquid" onfocus="setFocus('Inp3'); CalcTab()"  onchange="CalcTab()" onkeyup="CalcTab()" onblur="CalcTab()">
+                                            <div class="input-group-addon" id="Disp3">liter</div>
+                                        </div>
+                                        <div id="Res3"></div>
+                                    </div>
+                                    <div id="Grp4" class="form-group">
+                                        <label class="control-label" for="Inp4" id="Lab4">Weight</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control " value="1.1417" id="Inp4" placeholder="Weight" onfocus="setFocus('Inp4'); CalcTab()"  onchange="CalcTab()" onkeyup="CalcTab()" onblur="CalcTab()">
+                                            <div class="input-group-addon" id="Disp4">kg</div>
+                                        </div>
+                                        <div id="Res4"></div>
+                                    </div>
+                                    <div id="Grp5" class="form-group">
+                                        <label class="control-label" for="Inp5" id="Lab5">Gas @ 30.0 &#176;C</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control " value="0.7989" id="Inp5" placeholder="Gas" onfocus="setFocus('Inp5'); CalcTab()"  onchange="CalcTab()" onkeyup="CalcTab()" onblur="CalcTab()">
+                                            <div class="input-group-addon" id="Disp5">m<sup>3</sup></div>
+                                        </div>
+                                        <div id="Res5"></div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal fade" id="myAbout" tabindex="-1" role="dialog" aria-hidden="true" data-keyboard="false" data-backdrop="static">
+                    <div class="modal-dialog modal-md">
+                        <div class="modal-content">
+                            <div class="color-line"></div>
+                            <div class="modal-header text-center">
+                                <h4 id="myDialogTitle" class="modal-title">About</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <div>
+                                            <p><span><strong>Gas Conversion</strong> - Estimates liquid oxygen, nitrogen, argon, carbon dioxide, and nitrous oxide density, gas unit conversion.
+                                            </span></p>
+                                            References:
+                                            <ul>
+                                            <li><a href="javascript:void(0)" onclick="navigator.app.loadUrl('http://www.ddbst.com/calculation.html', { openExternal:true })">
+                                                DDBST Online Calculation</a>
+                                            </li>
+                                            <li><a href="javascript:void(0)" onclick="navigator.app.loadUrl('https://webbook.nist.gov/', { openExternal:true })">
+                                                NIST Chemistry WebBook</a>
+                                            </li>
+                                            <li><a href="javascript:void(0)" onclick="navigator.app.loadUrl('https://lar.bnl.gov/properties/basic.html', { openExternal:true })">
+                                                LAr Basic Properties</a>
+                                            </li>
+                                            <li><a href="javascript:void(0)" onclick="navigator.app.loadUrl('https://books.google.co.id/books?id=N8RcH8juG_YC&lpg=PP1&hl=id&pg=PA103#v=onepage&q&f=true', { openExternal:true })">
+                                                Physical Properties of Liquids and Gases</a>
+                                            </li>
+                                            <li><a href="javascript:void(0)" onclick="navigator.app.loadUrl('http://edge.rit.edu/edge/P07106/public/Nox.pdf', { openExternal:true })">
+                                                Thermophysical Properties of Nitrous Oxide</a>
+                                            </li>
+                                            </ul>
+                                            <br><span>Donation: <a href="javascript:void(0)" onclick="navigator.app.loadUrl('https://www.paypal.me/kumajaya', { openExternal:true })">
+                                                via Paypal</a>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer form-horizontal">
+                                <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-close pl-10"></i>&nbsp; Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal fade" id="myUnits" tabindex="-1" role="dialog" aria-hidden="true" data-keyboard="false" data-backdrop="static">
+                    <div class="modal-dialog modal-md modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="color-line"></div>
+                            <div class="modal-header text-center">
+                                <h4 class="modal-title">Units</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <div class="form-group">
+                                            <label for="VOpt">Volume</label>
+                                            <select class="form-control" id="VOpt" onblur="OptChange();" onchange="OptChange();">
+                                                <option value="1">in&sup3;</option>
+                                                <option value="2">ft&sup3;</option>
+                                                <option value="3">Gallon (US)</option>
+                                                <option value="4" selected="selected">m&sup3;</option>
+                                                <option value="5">liter</option>
+                                                <option value="6">barrel</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="POpt">Pressure</label>
+                                            <select class="form-control" id="POpt" onblur="OptChange();" onchange="OptChange();">
+                                                <option value="1">atm-absolute</option>
+                                                <option value="2" selected="selected">bar-absolute</option>
+                                                <option value="3">PSI-absolute</option>
+                                                <option value="4">kPa-absolute</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="MOpt">Weight</label>
+                                            <select class="form-control" id="MOpt" onblur="OptChange();" onchange="OptChange();">
+                                                <option value="1">kg</option>
+                                                <option value="2">metric ton</option>
+                                                <option value="3">lb</option>
+                                                <option value="4">short ton</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="TOpt">Temperature</label>
+                                            <select class="form-control" id="TOpt" onblur="OptChange();" onchange="OptChange();">
+                                                <option value="1" selected="selected">Celsius</option>
+                                                <option value="2">Kelvin</option>
+                                                <option value="3">Fahrenheit</option>
+                                                <option value="4">Rankine</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="VGOpt">Gas Volume</label>
+                                            <select class="form-control" id="VGOpt" onblur="OptChange();" onchange="OptChange();">
+                                                <option value="2">SCF</option>
+                                                <option value="3">ACF</option>
+                                                <option value="4">Nm&#xB3;</option>
+                                                <option value="5">Sm&#xB3;</option>
+                                                <option value="6" selected="selected">m&#xB3;</option>
+                                            </select>
+                                        </div>
+                                        <div id="VGOptIn" class="hidden">
+                                            <div id="Grp6" class="form-group">
+                                                <label class="control-label" for="Inp6" id="Lab6">Gas Temperature</label>
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control " value="30.00" id="Inp6" placeholder="Gas Temperature" onfocus="CalcTab()" onchange="CalcTab()" onkeyup="CalcTab()" onblur="CalcTab()">
+                                                    <div class="input-group-addon" id="Disp6">&#176;C</div>
+                                                </div>
+                                                <div id="Res6"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-close pl-10"></i>&nbsp; Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Vendor scripts -->
+        <script src="assetsh/vendor/jquery/dist/jquery.min.js"></script>
+        <script src="assetsh/vendor/bootstrap/dist/js/bootstrap.min.js"></script>
+        <script src="assetsh/vendor/metisMenu/dist/metisMenu.min.js"></script>
+        <script src="assetsh/vendor/iCheck/icheck.min.js"></script>
+        <script src="assetsh/vendor/sparkline/index.js"></script>
+        <!-- App scripts -->
+        <script src="assetsh/scripts/homer.js"></script>
+        <!-- Cordova -->
+        <script src="cordova.js"></script>
+        <style>
+            body.modal-open {
+            padding-right: 0 !important;
+            }
+        </style>
+    </body>
+</html>
