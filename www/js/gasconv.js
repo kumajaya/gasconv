@@ -2,6 +2,7 @@ var Product;
 var VNewID, PNewID, MNewID, TNewID, VGNewID, VGTemp;
 var PVal, LVal, WVal, GVal;
 var FConv, FPress;
+var cordovaready;
 
 function init() {
     Product = 1;
@@ -927,5 +928,14 @@ function IsProbDs(i, p) {
 
 function onDeviceReady() {
     init();
+    if (!cordovaready) {
+        document.getElementById("DDBSTLink").innerHTML = "<a target=\"_blank\" href=\"http://www.ddbst.com/calculation.html\">DDBST Online Calculation</a>";
+        document.getElementById("NISTLink").innerHTML = "<a target=\"_blank\" href=\"https://webbook.nist.gov/\">NIST Chemistry WebBook</a>";
+        document.getElementById("BNLLink").innerHTML = "<a target=\"_blank\" href=\"https://lar.bnl.gov/properties/basic.html\">LAr Basic Properties</a>";
+        document.getElementById("BookLink").innerHTML = "<a target=\"_blank\" href=\"https://books.google.co.id/books?id=N8RcH8juG_YC&lpg=PP1&hl=id&pg=PA103#v=onepage&q&f=true\">Physical Properties of Liquids and Gases</a>";
+        document.getElementById("EDGELink").innerHTML = "<a target=\"_blank\" href=\"http://edge.rit.edu/edge/P07106/public/Nox.pdf\">Thermophysical Properties of Nitrous Oxide</a>";
+        document.getElementById("DonateLink").innerHTML = "Donation: <a target=\"_blank\" href=\"https://www.paypal.me/kumajaya\">via Paypal</a>";
+        console.log('We on a ' + getBrowser() + ' browser...');
+    }
     $('.splash').css('display', 'none');
 }
